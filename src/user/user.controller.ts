@@ -11,13 +11,14 @@ import {
     Param,
     Query,
     UseGuards,
+    Version
   } from '@nestjs/common';
 import { createUserDto } from '../dto/createUserDto';
 import { updateUserDto } from '../dto/updateUserDto';
 import { UserService } from './user.service';
 
 
-@Controller('api/user')
+@Controller('user')
 export class UserController {
     constructor(private userService: UserService) {}
     @Post()
@@ -36,6 +37,7 @@ export class UserController {
       }
     }
   
+    @Version('1.1')
     @Get('/:id')
     public async getsupport(@Res() res, @Param('id') userId: string) {
       const singlesupport = await this.userService.finduserById(
