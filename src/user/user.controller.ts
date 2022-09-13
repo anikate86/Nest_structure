@@ -11,18 +11,27 @@ import {
     Param,
     Query,
     UseGuards,
-    Version
+    Version,
+    Inject,
+    Logger
   } from '@nestjs/common';
 import { createUserDto } from '../dto/createUserDto';
 import { updateUserDto } from '../dto/updateUserDto';
 import { UserService } from './user.service';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+//import { Logger } from 'winston'
 
 
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService) {}
+    
+    constructor(private userService: UserService,
+      //private readonly logger: Logger,
+   @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+    ) {}
     @Post()
     public async addsupport(@Res() res, @Body() model: createUserDto) {
+      this.logger.log('Calling getHello()',UserController.name);
       try {
         const user = await this.userService.createuser(model);
         return res.status(HttpStatus.OK).json({
@@ -37,7 +46,7 @@ export class UserController {
       }
     }
   
-    @Version('1.1')
+    @Version(['1','1.2'])
     @Get('/:id')
     public async getsupport(@Res() res, @Param('id') userId: string) {
       const singlesupport = await this.userService.finduserById(
